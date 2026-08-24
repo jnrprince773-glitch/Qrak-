@@ -1,23 +1,21 @@
-const themeBtn = document.getElementById('themeBtn');
-const navLinks = [...document.querySelectorAll('.nav a')];
-
-// Small, dependency-free interaction layer. QRAK-specific state can be added here.
-themeBtn?.addEventListener('click', () => {
-  document.body.classList.toggle('high-contrast');
-  const enabled = document.body.classList.contains('high-contrast');
-  themeBtn.textContent = enabled ? '◑' : '◐';
-  themeBtn.setAttribute('aria-pressed', String(enabled));
-});
-
-const sections = [...document.querySelectorAll('main section[id]')];
-const setActiveNav = () => {
-  const marker = window.scrollY + window.innerHeight * 0.3;
-  let current = sections[0]?.id;
-  for (const section of sections) {
-    if (marker >= section.offsetTop) current = section.id;
-  }
-  navLinks.forEach((link) => link.classList.toggle('active', link.getAttribute('href') === `#${current}`));
-};
-
-window.addEventListener('scroll', setActiveNav, { passive: true });
-setActiveNav();
+const STORAGE_KEY='qrak-projects-v1';
+const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
+let projects=load();let activeFilter='all';let search='';
+function load(){try{const raw=localStorage.getItem(STORAGE_KEY);return raw?JSON.parse(raw):[];}catch{return[]}}
+function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(projects));render()}
+function esc(v=''){return String(v).replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\\':'&#92;','"':'&quot;'}[c]))}
+function visible(){return projects.filter(p=>{const filter=activeFilter==='all'||p.status===activeFilter;const hay=[p.name,p.category,p.stack,p.description,p.notes].join(' ').toLowerCase();return filter&&hay.includes(search.toLowerCase())})}
+function render(){const list=visible();$('#projectCount').textContent=projects.length;$('#activeCount').textContent=projects.filter(p=>p.status==='active').length;$('#doneCount').textContent=projects.filter(p=>p.status==='completed').length;$('#favCount').textContent=projects.filter(p=>p.pinned).length;$('#resultCount').textContent=`${list.length} shown`;$('#emptyState').hidden=list.length>0||projects.length>0;const grid=$('#projectGrid');grid.innerHTML=list.map(card).join('');updateAnalytics();}
+function card(p){const cls=`status-${p.status}`;const stacks=(p.stack||'').split(',').map(x=>x.trim()).filter(Boolean).slice(0,6).map(x=>`<span>${esc(x)}</span>`).join('');return `<article class="project-card"><div class="project-top"><span class="status-pill ${cls}">${esc(p.status)}</span><div><span class="category-pill">${esc(p.category)}</span><button class="pin ${p.pinned?'active':''}" data-action="pin" data-id="${p.id}" aria-label="Pin project">★</button></div></div><h3>${esc(p.name)}</h3><p class="project-description">${esc(p.description||'No description yet.')}</p><div class="stack">${stacks||'<span>No stack added</span>'}</div><div class="project-footer"><div class="project-links">${p.github?`<a class="tiny-btn" href="${esc(p.github)}" target="_blank" rel="noopener">GitHub ↗</a>`:''}${p.live?`<a class="tiny-btn" href="${esc(p.live)}" target="_blank" rel="noopener">Live ↗</a>`:''}</div><div><button class="tiny-btn" data-action="edit" data-id="${p.id}">Edit</button><button class="tiny-btn" data-action="delete" data-id="${p.id}">Delete</button></div></div></article>`}
+function updateAnalytics(){const done=projects.filter(p=>p.status==='completed').length;const rate=projects.length?Math.round(done/projects.length*100):0;const counts={};projects.forEach(p=>(p.stack||'').split(',').map(s=>s.trim()).filter(Boolean).forEach(s=>counts[s]=(counts[s]||0)+1));const top=Object.entries(counts).sort((a,b)=>b[1]-a[1])[0];$('#aProjects').textContent=projects.length;$('#aCompletion').textContent=`${rate}%`;$('#aStack').textContent=top?top[0]:'—'}
+function openModal(id=null){const p=id?projects.find(x=>x.id===id):null;$('#modalTitle').textContent=p?'Edit project':'New project';$('#projectId').value=p?.id||'';$('#nameInput').value=p?.name||'';$('#categoryInput').value=p?.category||'Web App';$('#statusInput').value=p?.status||'active';$('#stackInput').value=p?.stack||'';$('#descriptionInput').value=p?.description||'';$('#notesInput').value=p?.notes||'';$('#githubInput').value=p?.github||'';$('#liveInput').value=p?.live||'';$('#modalBackdrop').hidden=false;setTimeout(()=>$('#nameInput').focus(),30)}
+function closeModal(){$('#modalBackdrop').hidden=true}
+function toast(message){const el=$('#toast');el.textContent=message;el.classList.add('show');clearTimeout(window.__toast);window.__toast=setTimeout(()=>el.classList.remove('show'),2200)}
+$('#newProjectBtn').onclick=()=>openModal();$('#emptyCreateBtn').onclick=()=>openModal();$('#closeModal').onclick=closeModal;$('#cancelBtn').onclick=closeModal;$('#modalBackdrop').addEventListener('click',e=>{if(e.target.id==='modalBackdrop')closeModal()});
+$('#projectForm').addEventListener('submit',e=>{e.preventDefault();const id=$('#projectId').value;const payload={name:$('#nameInput').value.trim(),category:$('#categoryInput').value,status:$('#statusInput').value,stack:$('#stackInput').value.trim(),description:$('#descriptionInput').value.trim(),notes:$('#notesInput').value.trim(),github:$('#githubInput').value.trim(),live:$('#liveInput').value.trim()};if(!payload.name)return;if(id){const i=projects.findIndex(p=>p.id===id);projects[i]={...projects[i],...payload,updatedAt:Date.now()};toast('Project updated.')}else{projects.unshift({id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),...payload,pinned:false,createdAt:Date.now(),updatedAt:Date.now()});toast('Project added to QRAK.')}save();closeModal()});
+$('#projectGrid').addEventListener('click',e=>{const btn=e.target.closest('[data-action]');if(!btn)return;const id=btn.dataset.id;const action=btn.dataset.action;const p=projects.find(x=>x.id===id);if(!p)return;if(action==='edit')openModal(id);if(action==='pin'){p.pinned=!p.pinned;save();toast(p.pinned?'Pinned to vault.':'Unpinned.')}if(action==='delete'){if(confirm(`Delete ${p.name}?`)){projects=projects.filter(x=>x.id!==id);save();toast('Project deleted.')}}});
+$('#searchInput').addEventListener('input',e=>{search=e.target.value;render()});$$('.filter').forEach(b=>b.addEventListener('click',()=>{$$('.filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');activeFilter=b.dataset.filter;render()}));
+$('#themeBtn').addEventListener('click',()=>{document.body.classList.toggle('high-contrast');const on=document.body.classList.contains('high-contrast');$('#themeBtn').textContent=on?'◑':'◐';});
+$('#exportBtn').addEventListener('click',()=>{const blob=new Blob([JSON.stringify({app:'QRAK',version:1,exportedAt:new Date().toISOString(),projects},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`qrak-vault-${new Date().toISOString().slice(0,10)}.json`;a.click();URL.revokeObjectURL(url);toast('Vault exported.');});
+window.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#modalBackdrop').hidden)closeModal();if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();$('#searchInput').focus()}});
+render();
