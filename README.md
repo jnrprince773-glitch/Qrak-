@@ -1,20 +1,44 @@
 # QRAK
 
-QRAK is being built as a direct GitHub project without relying on a visual app builder.
+**Your personal project command center.**
 
-## Current foundation
+QRAK is a local-first project vault for saving, organizing, tracking and showcasing everything you build.
 
-- Responsive single-page interface
-- Dark glass-style visual system
-- Separate HTML, CSS, and JavaScript files
-- Lightweight navigation state handling
-- Contrast toggle
-- Mobile-first responsive behavior
+## Current features
 
-## Run locally
+- Project CRUD: create, edit and delete projects
+- Statuses: Active, Idea and Completed
+- Search + filters
+- Pin/favorite projects
+- Tech-stack tags
+- GitHub + live-demo links
+- Notes and next steps
+- Local persistence with browser storage
+- JSON vault export
+- Analytics dashboard
+- Responsive cyber/glass UI
+- Optional encrypted cloud sync
 
-Open `index.html` in a browser, or serve the folder with any static web server.
+## Cloud Sync setup
 
-## Next layer
+The UI and sync API are included, but cloud storage requires a Vercel Blob store. Vercel Blob supports private stores and server-side access through `@vercel/blob`.
 
-The foundation is intentionally framework-free so the actual QRAK product logic can be added without being locked to a specific builder or stack.
+1. Connect this repository to Vercel.
+2. Create a **private** Vercel Blob store and attach it to the project.
+3. Make sure the project has `BLOB_READ_WRITE_TOKEN` available in its deployment environment.
+4. Deploy the project.
+5. Open QRAK → **Cloud sync** → **Generate new code**.
+6. Keep the sync code private. Use that same code on another device to restore the vault.
+
+QRAK encrypts the project vault in the browser with AES-GCM before uploading the payload. The server stores the encrypted payload and does not need the plaintext project data.
+
+> The sync code is effectively the vault key. If it is lost, QRAK cannot recover the cloud vault for you.
+
+## Development
+
+This is a static-first app with a small Vercel serverless API under `/api/sync`.
+
+```bash
+npm install
+npm run dev
+```
