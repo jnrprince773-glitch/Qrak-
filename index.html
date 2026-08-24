@@ -3,98 +3,102 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#08090d" />
-  <meta name="description" content="QRAK — a modern project foundation." />
-  <title>QRAK</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <meta name="theme-color" content="#07080d" />
+  <meta name="description" content="QRAK — your personal command center for every project you build." />
+  <title>QRAK — Project Vault</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="bg-orb orb-a" aria-hidden="true"></div>
-  <div class="bg-orb orb-b" aria-hidden="true"></div>
+  <div class="ambient ambient-a" aria-hidden="true"></div>
+  <div class="ambient ambient-b" aria-hidden="true"></div>
 
   <header class="topbar">
-    <a class="brand" href="#" aria-label="QRAK home">
-      <span class="brand-mark">Q</span>
-      <span>QRAK</span>
-    </a>
+    <a class="brand" href="#top" aria-label="QRAK home"><span class="brand-mark">Q</span><span>QRAK</span></a>
     <nav class="nav" aria-label="Primary navigation">
-      <a class="active" href="#home">Home</a>
-      <a href="#workspace">Workspace</a>
-      <a href="#about">About</a>
+      <a class="active" href="#top">Vault</a>
+      <a href="#analytics">Analytics</a>
     </nav>
-    <button class="ghost-btn" id="themeBtn" type="button" aria-label="Toggle contrast">◐</button>
+    <button class="icon-btn" id="themeBtn" aria-label="Toggle visual mode">◐</button>
   </header>
 
-  <main>
-    <section class="hero" id="home">
-      <div class="hero-copy">
-        <p class="eyebrow"><span class="pulse"></span> QRAK FOUNDATION</p>
-        <h1>Build the <span>next thing.</span></h1>
-        <p class="hero-text">A clean, fast starting point for QRAK. The interface is ready; the product logic can now grow independently from the UI.</p>
-        <div class="hero-actions">
-          <a class="primary-btn" href="#workspace">Enter workspace <span>→</span></a>
-          <a class="secondary-btn" href="#about">See the foundation</a>
-        </div>
-      </div>
-      <div class="hero-card" aria-label="QRAK status">
-        <div class="card-head">
-          <span>QRAK / CORE</span>
-          <span class="status"><i></i> ONLINE</span>
-        </div>
-        <div class="terminal">
-          <div><span class="muted">01</span> system.init()</div>
-          <div><span class="muted">02</span> ui.mount(<b>QRAK</b>)</div>
-          <div><span class="muted">03</span> state.ready = <b>true</b></div>
-          <div><span class="muted">04</span> next.build()</div>
-          <div class="cursor">_</div>
-        </div>
-      </div>
-    </section>
-
-    <section class="workspace" id="workspace">
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow">WORKSPACE</p>
-          <h2>Ready for the real build.</h2>
-        </div>
-        <span class="build-chip">v0.1 foundation</span>
-      </div>
-      <div class="grid">
-        <article class="panel">
-          <span class="panel-icon">01</span>
-          <h3>Structure</h3>
-          <p>Simple static entry point with separated HTML, CSS, and JavaScript so the project stays easy to extend.</p>
-        </article>
-        <article class="panel">
-          <span class="panel-icon">02</span>
-          <h3>Interface</h3>
-          <p>Responsive dark UI, accessible controls, fluid type, and reusable visual primitives are in place.</p>
-        </article>
-        <article class="panel">
-          <span class="panel-icon">03</span>
-          <h3>Logic</h3>
-          <p>The JavaScript layer is intentionally lightweight and ready for QRAK-specific state, APIs, and interactions.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="about" id="about">
+  <main id="top" class="shell">
+    <section class="hero">
       <div>
-        <p class="eyebrow">ABOUT THIS BUILD</p>
-        <h2>No Lovable required.</h2>
+        <p class="eyebrow"><span class="dot"></span> PERSONAL PROJECT VAULT</p>
+        <h1>Your projects.<br><span>One command center.</span></h1>
+        <p class="hero-copy">QRAK keeps your builds, ideas, links, notes and progress in one fast workspace. Everything is stored locally in your browser in this first version.</p>
+        <div class="hero-actions">
+          <button class="primary-btn" id="newProjectBtn">+ New project</button>
+          <button class="secondary-btn" id="exportBtn">Export vault</button>
+        </div>
       </div>
-      <p>This repo is now a direct-build foundation. From here, QRAK can evolve through normal Git commits and deployment instead of depending on a visual builder.</p>
+      <aside class="overview-card">
+        <div class="overview-top"><span>VAULT STATUS</span><span class="live"><i></i> LOCAL</span></div>
+        <div class="metric-big" id="projectCount">0</div>
+        <div class="metric-label">projects in your vault</div>
+        <div class="mini-grid">
+          <div><b id="activeCount">0</b><span>Active</span></div>
+          <div><b id="doneCount">0</b><span>Completed</span></div>
+          <div><b id="favCount">0</b><span>Pinned</span></div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="toolbar" aria-label="Project controls">
+      <div class="search-wrap"><span>⌕</span><input id="searchInput" type="search" placeholder="Search projects, stacks, notes..." /></div>
+      <div class="filter-wrap">
+        <button class="filter active" data-filter="all">All</button>
+        <button class="filter" data-filter="active">Active</button>
+        <button class="filter" data-filter="idea">Ideas</button>
+        <button class="filter" data-filter="completed">Done</button>
+      </div>
+    </section>
+
+    <section class="section-block" id="vault">
+      <div class="section-heading"><div><p class="eyebrow">PROJECT VAULT</p><h2>Everything you’re building.</h2></div><span class="count-chip" id="resultCount">0 shown</span></div>
+      <div id="emptyState" class="empty-state">
+        <div class="empty-icon">✦</div>
+        <h3>Your vault is empty.</h3>
+        <p>Create your first project and start making QRAK your build command center.</p>
+        <button class="primary-btn" id="emptyCreateBtn">Create first project</button>
+      </div>
+      <div class="project-grid" id="projectGrid"></div>
+    </section>
+
+    <section class="analytics" id="analytics">
+      <div><p class="eyebrow">ANALYTICS</p><h2>Build momentum.</h2></div>
+      <div class="analytics-grid">
+        <article><span>PROJECTS</span><strong id="aProjects">0</strong><small>Total projects</small></article>
+        <article><span>COMPLETION</span><strong id="aCompletion">0%</strong><small>Vault completion rate</small></article>
+        <article><span>TOP STACK</span><strong id="aStack">—</strong><small>Most used technology</small></article>
+      </div>
     </section>
   </main>
 
-  <footer>
-    <span>QRAK</span>
-    <span>Built directly in GitHub.</span>
-  </footer>
+  <div class="modal-backdrop" id="modalBackdrop" hidden>
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-head"><div><p class="eyebrow">PROJECT EDITOR</p><h2 id="modalTitle">New project</h2></div><button class="icon-btn" id="closeModal" aria-label="Close">×</button></div>
+      <form id="projectForm">
+        <input type="hidden" id="projectId">
+        <div class="form-grid">
+          <label>Project name<input required id="nameInput" maxlength="60" placeholder="e.g. Clover Academy"></label>
+          <label>Category<select id="categoryInput"><option>Web App</option><option>Mobile</option><option>AI</option><option>Game</option><option>School</option><option>Tool</option><option>Other</option></select></label>
+          <label>Status<select id="statusInput"><option value="active">Active</option><option value="idea">Idea</option><option value="completed">Completed</option></select></label>
+          <label>Tech stack<input id="stackInput" maxlength="120" placeholder="HTML, CSS, JavaScript"></label>
+          <label class="full">Description<textarea id="descriptionInput" rows="3" maxlength="260" placeholder="What is this project?"></textarea></label>
+          <label class="full">Notes<textarea id="notesInput" rows="4" maxlength="800" placeholder="Ideas, next steps, reminders..."></textarea></label>
+          <label>GitHub URL<input id="githubInput" type="url" placeholder="https://github.com/"></label>
+          <label>Live URL<input id="liveInput" type="url" placeholder="https://"></label>
+        </div>
+        <div class="modal-actions"><button type="button" class="secondary-btn" id="cancelBtn">Cancel</button><button type="submit" class="primary-btn">Save project</button></div>
+      </form>
+    </section>
+  </div>
 
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script src="app.js"></script>
 </body>
 </html>
