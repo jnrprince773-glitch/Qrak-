@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#07080d" />
   <meta name="description" content="QRAK — your personal command center for every project you build." />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="QRAK" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/icon.svg" />
   <title>QRAK — Project Vault</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -37,5 +44,6 @@
   <div class="modal-backdrop" id="syncBackdrop" hidden><section class="modal sync-modal" role="dialog" aria-modal="true" aria-labelledby="syncTitle"><div class="modal-head"><div><p class="eyebrow">QRAK CLOUD</p><h2 id="syncTitle">Sync your vault.</h2></div><button class="icon-btn" id="closeSync" aria-label="Close">×</button></div><p class="sync-copy">Your vault stays encrypted in your browser before it is uploaded. Use the same sync code on another device to restore it.</p><div class="sync-code"><label for="syncCode">Sync code</label><div class="code-row"><input id="syncCode" readonly placeholder="Generate a code..."><button class="secondary-btn" id="copySync">Copy</button></div></div><div class="sync-actions"><button class="primary-btn" id="generateSync">Generate new code</button><button class="secondary-btn" id="uploadSync">Upload encrypted vault</button><button class="secondary-btn" id="restoreSync">Restore from cloud</button></div><p class="sync-warning">Keep the code private. Anyone with it can restore your encrypted vault.</p></section></div>
   <div class="modal-backdrop" id="aiBackdrop" hidden><section class="modal ai-modal" role="dialog" aria-modal="true" aria-labelledby="aiTitle"><div class="modal-head"><div><p class="eyebrow">QRAK AI</p><h2 id="aiTitle">Project intelligence.</h2></div><button class="icon-btn" id="closeAi" aria-label="Close">×</button></div><div class="ai-messages" id="aiMessages"><div class="ai-bubble ai-bubble-system">Hey. QRAK AI is connected to this browser's project vault. Ask for a plan, prioritization, review, summary, architecture idea, or next move.</div></div><div class="ai-prompt-row"><textarea id="aiInput" rows="2" maxlength="4000" placeholder="Ask QRAK AI about your projects..."></textarea><button class="primary-btn" id="sendAi">Send ↗</button></div><div class="ai-suggestions"><button data-ai-prompt="Which active project should I prioritize next, and why?">Prioritize</button><button data-ai-prompt="Give me a practical plan for my most important active project.">Plan a project</button><button data-ai-prompt="Summarize my current project vault and point out gaps.">Analyze vault</button></div></section></div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div><script src="app.js"></script>
+  <script>if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));</script>
 </body>
 </html>
