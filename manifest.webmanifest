@@ -1,13 +1,1 @@
-{
-  "name": "QRAK — Project Vault",
-  "short_name": "QRAK",
-  "description": "Your personal command center for every project you build.",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#07080d",
-  "theme_color": "#07080d",
-  "orientation": "portrait-primary",
-  "icons": [
-    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
-  ]
-}
+{"name":"QRAK — Project Vault","short_name":"QRAK","description":"Track. Plan. Achieve. — The OS for Focused Builders.","start_url":"/","scope":"/","display":"standalone","background_color":"#030605","theme_color":"#72ff31","orientation":"portrait-primary","icons":[{"src":"/icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]}
