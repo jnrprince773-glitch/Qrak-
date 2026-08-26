@@ -1,0 +1,1 @@
+QRAK deployment trigger — this commit is intended to trigger the connected Vercel Git deployment.
